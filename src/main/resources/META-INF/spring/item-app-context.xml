@@ -18,19 +18,19 @@
 
 	 <rabbit:direct-exchange name="direct" durable="true">
 	  <rabbit:bindings>
-	   <rabbit:binding queue="directQueue" key="order.key"></rabbit:binding>
-	   <rabbit:binding queue="answerQueue" key="order.answer"></rabbit:binding>
+	   <rabbit:binding queue="directQueue" key="item.key"></rabbit:binding>
+	   <rabbit:binding queue="answerQueue" key="item.answer"></rabbit:binding>
 	  </rabbit:bindings>
 	 </rabbit:direct-exchange>
 
 <!-- **************** DIRECT PRODUCER  -->
 <!-- This producer will publish with this routing key [essentially to queue directQueue] associated with it...] -->
     <rabbit:template id="directTemplate" connection-factory="connectionFactory"
-                     reply-timeout="2000" routing-key="order.key"
+                     reply-timeout="2000" routing-key="item.key"
                      exchange="direct" />
 
 <!-- This producer will publish with this routing key [essentially to queue answerQueue] associated with it...] -->
     <rabbit:template id="answerTemplate" connection-factory="connectionFactory"
-                     reply-timeout="2000" routing-key="order.answer"
+                     reply-timeout="2000" routing-key="item.answer"
                      exchange="direct" />
 </beans>
