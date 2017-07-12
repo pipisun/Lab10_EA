@@ -14,21 +14,36 @@ public class Item  implements Serializable {
 
  
      private String description;
-
+     
+     private double price;
+     
      public Item() {
     	 
      }
  
-     public Item(String name, String description) {
+     public Item(String name, String description, double price) {
     	 this.name = name;
     	 this.description = description;
+    	 this.price = price;
     	 
      }
  
     // ********************** Accessor Methods ********************** //
 
     public Long getId() { return id; }
-    public int getVersion() { return version; }
+    public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
+	public int getVersion() { return version; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
