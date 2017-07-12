@@ -17,7 +17,7 @@ public class ItemTransformerImpl implements ItemTransformer {
 	 */
 	@Transformer(inputChannel="fromR", outputChannel="fromTransformer")
 	public RouteItem transformItem(Item item) {
- 
+		
 		String name = item.getName();
 		double price = item.getPrice();
 		String auctionID = name + item.getVersion();

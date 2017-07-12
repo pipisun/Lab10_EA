@@ -23,7 +23,7 @@ public class HighPriceMessageListener implements MessageListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("HIGH PRICE - Message received: ");
+		System.out.println("High Price - Message received: ");
 		System.out.println("         Item Name: " + bookRouteItem.getName());
 		System.out.println("         Price: " + bookRouteItem.getPrice());
 		System.out.println("         Auction Name: " + bookRouteItem.getAuctionID());

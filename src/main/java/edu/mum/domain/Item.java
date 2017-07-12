@@ -6,7 +6,12 @@ public class Item  implements Serializable {
 
 	  
 	  
-     private Long id = null;
+     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Long id = null;
 
      private int version = 0;
 
