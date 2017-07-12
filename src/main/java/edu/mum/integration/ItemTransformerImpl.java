@@ -15,7 +15,7 @@ public class ItemTransformerImpl implements ItemTransformer {
 	/**
 	 * Transform Order from AMQP to RouteOrder for JMS
 	 */
-	@Transformer(inputChannel="fromAmqpOrder", outputChannel="processOrder")
+	@Transformer(inputChannel="fromR", outputChannel="fromTransformer")
 	public RouteItem transformItem(Item item) {
  
 		String name = item.getName();

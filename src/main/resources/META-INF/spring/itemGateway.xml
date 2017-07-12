@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/integration"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
 	xmlns:beans="http://www.springframework.org/schema/beans"
-	xmlns:amqp="http://www.springframework.org/schema/integration/amqp"
+	xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
 	xmlns:jms="http://www.springframework.org/schema/integration/jms"
 	xmlns:mail="http://www.springframework.org/schema/integration/mail"
 	xmlns:stream="http://www.springframework.org/schema/integration/stream"
@@ -19,10 +20,14 @@
     		http://www.springframework.org/schema/integration/jms
 			http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd
 			http://www.springframework.org/schema/integration/stream
-			http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd">
+			http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
+			http://www.springframework.org/schema/rabbit
+			http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+			
 
-	<amqp:inbound-channel-adapter channel="fromR"
-		queue-names="inQueue" connection-factory="ampqConnectionFactory" />
+				
+	<int-amqp:inbound-channel-adapter channel="fromR"
+		queue-names="directQueue" connection-factory="amqpConnectionFactory" />
 		
 	<channel id="fromR"></channel>
 	
@@ -31,10 +36,26 @@
 	
 	<channel id="fromTransformer"></channel>
 	
-	<recipient-list-router id="customRouter" input-channel="fromTransformer" >
-	  <recipient channel="highpriceChannel"/>
-	  <recipient channel="lowpriceChannel"/>
+	<router input-channel="fromTransformer" ref="itemRouter" method="processItem"/>
+	
+	<channel id="priceProcess" />
+	
+	<recipient-list-router id="customRouter" input-channel="priceProcess" >
+		<recipient channel="highPriceChannel" />
+	 	<recipient channel="lowPriceChannel"/>
 	</recipient-list-router> 
+	
+	<channel id="highPriceChannel"></channel>
+	<channel id="lowPriceChannel"></channel>
+	
+	<channel id="highPriceChannelDelivery"/>
+    <channel id="lowPriceChannelDelivery"/>
+    
+	<bridge input-channel="highPriceChannel" output-channel="highPriceChannelDelivery" />
+    <bridge input-channel="lowPriceChannel" output-channel="lowPriceChannelDelivery" />
+
+	<jms:outbound-channel-adapter id="jmsoutHigh" channel="highPriceChannelDelivery" destination="hpQueue"/>
+	<jms:outbound-channel-adapter id="jmsoutLow" channel="lowPriceChannelDelivery" destination="lpQueue"/>
 <!--      <gateway id="order" service-interface="edu.mum.integration.OrderGateway" -->
 <!-- 			 default-request-channel="processOrder"/> -->
  
@@ -78,7 +99,16 @@
 
 <!-- input order && transformedOrder need to go to JMS -->
 <!-- <bridge input-channel='transformedOrder' output-channel='warehouseDelivery'/> -->
-	
-	
+
+	<rabbit:admin connection-factory="amqpConnectionFactory" />                     
+	<rabbit:queue name="directQueue" />
+	<rabbit:queue name="outQueue" />
+
+	<rabbit:direct-exchange name="item">
+		<rabbit:bindings>
+			<rabbit:binding queue="directQueue" key="item.key" />
+			<rabbit:binding queue="outQueue" key="out.key" />
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
 	
 </beans:beans>

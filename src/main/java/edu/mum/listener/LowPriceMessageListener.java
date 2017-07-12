@@ -16,15 +16,16 @@ public class LowPriceMessageListener implements MessageListener {
 
     public void onMessage(Message message) {
         ObjectMessage objectMessage = (ObjectMessage) message;
-        RouteItem bookRouteOrder = null;
+        RouteItem bookRouteItem = null;
 		try {
-			bookRouteOrder = (RouteItem) objectMessage.getObject();
+			bookRouteItem = (RouteItem) objectMessage.getObject();
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        System.out.println("WAREHOUSE - Message received: " );
-        System.out.println("         product Name: "  + bookRouteOrder.getName());
-
+		System.out.println("Moderate Price - Message received: ");
+		System.out.println("         Item Name: " + bookRouteItem.getName());
+		System.out.println("         Price: " + bookRouteItem.getPrice());
+		System.out.println("         Auction Name: " + bookRouteItem.getAuctionID());
     }
 }
